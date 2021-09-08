@@ -55,7 +55,7 @@ public class T_Controller : MonoBehaviour
             child.gameObject.SetActive(true);
             yield return new WaitForSeconds(buildTimer);
             foreach(Transform grandchild in child){
-                grandchild.gameObject.SetActive(false);
+                grandchild.gameObject.SetActive(true);
             }
         }
     }

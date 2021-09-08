@@ -11,6 +11,9 @@ public class Tile : MonoBehaviour
     [SerializeField]
     T_Controller towerPrefab;
 
+    [SerializeField]
+    E_Controller enemyPrefab;
+
     GridManager gridManager;
     P_Pathfinder pathfinder;
     Vector2Int coordinates = new Vector2Int();
