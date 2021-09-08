@@ -4862,6 +4862,7 @@ MonoBehaviour:
   weapon: {fileID: 3898193998273153337}
   target: {fileID: 0}
   ps_system: {fileID: 1899426004305512210}
+  range: 15
 --- !u!114 &885063377085101204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4874,8 +4875,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a8834d83be15ecccaebc9b475de5745, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  damage: 2
   speed: 0
+  cost: 35
 --- !u!1 &5286232429101202895
 GameObject:
   m_ObjectHideFlags: 0

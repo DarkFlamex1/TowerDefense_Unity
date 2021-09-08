@@ -13,8 +13,16 @@ public class T_Controller : MonoBehaviour
     int speed = 0;
 
     [SerializeField]
+    float buildTimer = 1f;
+
+    [SerializeField]
     int cost = 75;
     B_BankController bankController;
+
+
+    void Start(){
+        StartCoroutine(Build());
+    }
 
     public bool CreateTower(T_Controller tower, Vector3 position){
 
@@ -31,5 +39,24 @@ public class T_Controller : MonoBehaviour
         }
         
         return false;
+    }
+
+    IEnumerator Build(){
+        //Disable all the gameobjects
+        foreach (Transform child in transform){
+            child.gameObject.SetActive(false);
+            foreach(Transform grandchild in child){
+                grandchild.gameObject.SetActive(false);
+            }
+        }
+        
+        foreach (Transform child in transform){
+
+            child.gameObject.SetActive(true);
+            yield return new WaitForSeconds(buildTimer);
+            foreach(Transform grandchild in child){
+                grandchild.gameObject.SetActive(false);
+            }
+        }
     }
 }

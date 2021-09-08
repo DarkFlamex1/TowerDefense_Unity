@@ -5,8 +5,9 @@ using UnityEngine;
 public class P_Pathfinder : MonoBehaviour
 {
     [SerializeField] Vector2Int startCoordinates;
+    public Vector2Int StartCoordinates {get{return startCoordinates;}}
     [SerializeField] Vector2Int destinationCoordinates;
-
+    public Vector2Int DestinationCoordinates {get{return destinationCoordinates;}}
     Node startNode;
     Node destinationNode;
     Node currentSearchNode;
@@ -16,18 +17,34 @@ public class P_Pathfinder : MonoBehaviour
     Vector2Int[] directions = {Vector2Int.right, Vector2Int.left, Vector2Int.up, Vector2Int.down};
     GridManager gridManager;
     void Awake() {
+        Debug.Log("Awake pathfinder");
         gridManager = FindObjectOfType<GridManager>();
+
+        startNode = gridManager.Grid[startCoordinates];
+        destinationNode = gridManager.Grid[destinationCoordinates];
+
+        startNode.isWalkable = true;
+        destinationNode.isWalkable = true;
     }
     // Start is called before the first frame update
     void Start()
     {
+        GetNewPath();
+    }
 
-        startNode = gridManager.Grid[startCoordinates];
-        destinationNode = gridManager.Grid[destinationCoordinates];
-        BreadthFirstSearch();
-        BuildPath();
+    public List<Node> GetNewPath(){
+        gridManager.ResetNode();
+        BreadthFirstSearch(startCoordinates);
+        return BuildPath();
     }
     
+    //Takes in a vector2 int
+    public List<Node> GetNewPath(Vector2Int startCoord){
+        gridManager.ResetNode();
+        BreadthFirstSearch(startCoord);
+        return BuildPath();
+    }
+
     void ExploreNeighbors(){
         List<Node> neighbors = new List<Node>();
 
@@ -52,12 +69,16 @@ public class P_Pathfinder : MonoBehaviour
 
     }
 
-    void BreadthFirstSearch(){
+    void BreadthFirstSearch(Vector2Int startCoord){
+        frontier.Clear();
+        reached.Clear();
+
+
         bool isRunning = true;
 
         //Add to queue, and add that we have reached
-        frontier.Enqueue(startNode);
-        reached.Add(startCoordinates, startNode);
+        frontier.Enqueue(gridManager.Grid[startCoord]);
+        reached.Add(startCoord, startNode);
 
         while(frontier.Count > 0 && isRunning){
             //Setup current search node
@@ -79,16 +100,48 @@ public class P_Pathfinder : MonoBehaviour
         
         Node currentNode = destinationNode;
         
+        path.Add(currentNode);
+        currentNode.isPath = true;
 
-        while(currentNode != startNode){
+        while(currentNode.parentNode != null){
+            currentNode = currentNode.parentNode;
             path.Add(currentNode);
             currentNode.isPath = true;
-            currentNode = currentNode.parentNode;
         }
 
         path.Reverse();
 
         return path;
+    }
+
+    public bool WillBlockPath(Vector2Int coordinates){
+        //Make sure the coordinates exist
+        if(gridManager.Grid.ContainsKey(coordinates)){
+
+            bool previousState = gridManager.Grid[coordinates].isWalkable;
+            //Not a walkable node
+            gridManager.Grid[coordinates].isWalkable = false;
+            //Get a new path
+            List<Node> newPath = GetNewPath();
+            gridManager.Grid[coordinates].isWalkable = previousState;
+            Debug.Log(newPath.Count + " COUNT");
+            if(newPath.Count <= 1){
+                Debug.Log("WILL BLOCK");
+                //No larger than the first single node, so we need new path from old state
+                GetNewPath();
+                return true;
+            }
+
+            //We can place!
+            return false;
+        }
+
+        //Grid Manager not FOUND!
+        return false;
+    }
+
+    public void NotifyReceivers(){
+        BroadcastMessage("FindPath", false, SendMessageOptions.DontRequireReceiver);
     }
 
 }

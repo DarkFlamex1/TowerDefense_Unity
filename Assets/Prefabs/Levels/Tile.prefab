@@ -187,6 +187,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   blockedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  exploredColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  pathColor: {r: 1, g: 0.5, b: 0, a: 1}
 --- !u!1 &21323907877402651
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,8 +198,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 21323907877402648}
-  - component: {fileID: 6150706017314652393}
   - component: {fileID: 7855386938226297360}
+  - component: {fileID: 6025299874633901827}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -222,20 +224,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6150706017314652393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 21323907877402651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42295ca5426e86b94968ed1ee061752d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPlaceable: 1
-  towerPrefab: {fileID: 885063377085101204, guid: e96318d1497ce130eb49aa944571d908, type: 3}
 --- !u!65 &7855386938226297360
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -249,6 +237,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 10, y: 0.5, z: 10}
   m_Center: {x: 0, y: -0.25, z: 0}
+--- !u!114 &6025299874633901827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 21323907877402651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b8905f3090065d4bab6fc036bb8c72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPlaceable: 1
+  towerPrefab: {fileID: 885063377085101204, guid: e96318d1497ce130eb49aa944571d908, type: 3}
 --- !u!1 &5085206285697801236
 GameObject:
   m_ObjectHideFlags: 0

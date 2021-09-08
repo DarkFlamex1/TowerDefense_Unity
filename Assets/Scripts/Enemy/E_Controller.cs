@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class E_Controller : MonoBehaviour
 {
-    [SerializeField] List<Waypoint> path = new List<Waypoint>();
+    List<Node> path = new List<Node>(); 
     [SerializeField] [Range(0f,5f)]float speed = 1f;
 
     [SerializeField] int maxHitPoints = 5;
@@ -15,9 +15,13 @@ public class E_Controller : MonoBehaviour
     B_BankController bankController;
     GM_Player player;
     
+    GridManager gridManager;
+    P_Pathfinder pathfinder;
     int currentHitPoints = 0;
 
-    void Start() {
+    void Awake() {
+        gridManager = FindObjectOfType<GridManager>();
+        pathfinder = FindObjectOfType<P_Pathfinder>();
         //Assign the bank controller
         bankController = FindObjectOfType<B_BankController>();
         player = FindObjectOfType<GM_Player>();
@@ -26,27 +30,32 @@ public class E_Controller : MonoBehaviour
     // Start is called before the first frame update
     void OnEnable()
     {
-        FindPath();
         ReturnToStart();
+        FindPath(true);
         //Init the maximum health
         currentHitPoints = maxHitPoints;
-        StartCoroutine(FollowPath());
     }
 
     void ReturnToStart(){
-        transform.position = path[0].transform.position;
+        transform.position = gridManager.GetPositionFromCoordinates(pathfinder.StartCoordinates);
     }
 
-    void FindPath(){
-        path.Clear();
+    void FindPath(bool reset){
+        Vector2Int coordinates = new Vector2Int();
 
-        //All objects tagged as a path
-        GameObject parent = GameObject.FindGameObjectWithTag("Path");
-
-        foreach(Transform child in parent.transform){
-            path.Add(child.GetComponent<Waypoint>());
+        if(reset){
+            coordinates = pathfinder.StartCoordinates;
+        }
+        else{
+            coordinates = gridManager.GetCoordinatesFromPosition(transform.position);
         }
 
+        StopAllCoroutines();
+
+        path.Clear();
+        path = pathfinder.GetNewPath(coordinates);
+
+        StartCoroutine(FollowPath());
     }
 
     private void OnParticleCollision(GameObject other) {
@@ -68,9 +77,10 @@ public class E_Controller : MonoBehaviour
     //Courtintine 
     IEnumerator FollowPath()
     {
-        foreach(Waypoint pt in path){
+
+        for(int i = 1; i < path.Count; i++){
             Vector3 startPosition = transform.position;
-            Vector3 endPosition = pt.transform.position;
+            Vector3 endPosition = gridManager.GetPositionFromCoordinates(path[i].coordinates);
             float travelPercent = 0f;
 
             //Follow the
