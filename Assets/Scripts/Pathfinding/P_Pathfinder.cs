@@ -139,7 +139,7 @@ public class P_Pathfinder : MonoBehaviour
         //Grid Manager not FOUND!
         return false;
     }
-
+    
     public void NotifyReceivers(){
         BroadcastMessage("FindPath", false, SendMessageOptions.DontRequireReceiver);
     }

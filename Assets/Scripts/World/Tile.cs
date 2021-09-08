@@ -32,6 +32,9 @@ public class Tile : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// Instantiate a prefab on the tile(selected prefab) when a mouse down is pressed.
+    /// </summary>
     void OnMouseDown() {
         if(gridManager.GetNode(coordinates).isWalkable && !pathfinder.WillBlockPath(coordinates)){
             //Instantiate the tower that is selected
